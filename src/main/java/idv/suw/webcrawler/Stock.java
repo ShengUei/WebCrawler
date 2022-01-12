@@ -8,9 +8,9 @@ public class Stock {
 	
 	private Date date;
 	private double openingPrice;
-	private double closingPrice;
 	private double highestPrice;
 	private double lowestPrice;
+	private double closingPrice;
 	private int transaction;
 	
 	public Stock() {}

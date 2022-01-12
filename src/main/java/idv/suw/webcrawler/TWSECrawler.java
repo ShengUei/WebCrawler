@@ -27,8 +27,12 @@ public class TWSECrawler extends Crawler {
 	
 	public TWSECrawler() {}
 	
-	public TWSECrawler(String iSIN) {
-		ISIN = iSIN;
+	public TWSECrawler(String ISIN) {
+		this.ISIN = ISIN;
+	}
+	
+	public TWSECrawler(Integer ISIN) {
+		this.ISIN = ISIN.toString();
 	}
 
 	public String getISIN() {
@@ -37,6 +41,10 @@ public class TWSECrawler extends Crawler {
 
 	public void setISIN(String ISIN) {
 		this.ISIN = ISIN;
+	}
+	
+	public void setISIN(Integer ISIN) {
+		this.ISIN = ISIN.toString();
 	}
 
 	@Override
@@ -54,14 +62,25 @@ public class TWSECrawler extends Crawler {
 		
 		searchBox.sendKeys(getISIN());
 		
-		WebElement wait = new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.elementToBeClickable(By.className("button")));
-		searchButton.click();
+		try {
+			WebElement wait = new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.elementToBeClickable(By.className("button")));
+			if (wait != null) {
+				System.out.println("Connected Successfully");
+			}
+			
+			searchButton.click();
+		} catch (TimeoutException e) {
+			LogFile lf = new LogFile();
+			lf.logGenerate(e);
+			
+			System.out.println("Connected Failure");
+		}
 		
 		try {
 			WebElement waitTable = new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(By.className("data-table")));	
 			
-			if (wait != null && waitTable != null) {
-				System.out.println("Web loading complete");
+			if (waitTable != null) {
+				System.out.println("Web Load Completed");
 			}
 			
 			Document doc = Jsoup.parse(driver.getPageSource());
@@ -71,12 +90,20 @@ public class TWSECrawler extends Crawler {
 			
 			Map<Integer, Stock> dataMap = extractData(elements);
 			
-			showData(dataMap);
+			//Test
+			String URL = "jdbc:sqlserver://localhost:1433;databaseName=stock;";
+			String userName = "test";
+			String password = "123456789";
+			DataBase test = new DataBase(URL, userName, password);
+			
+			test.insertData(dataMap);
+			//Test
+			
 		}catch (TimeoutException e) {
 			LogFile lf = new LogFile();
 			lf.logGenerate(e);
 			
-			System.out.println("查無此結果");
+			System.out.println("No Result");
 		}
 	}
 	
@@ -99,6 +126,8 @@ public class TWSECrawler extends Crawler {
 	}
 	
 	public void showData(Map<Integer, Stock> dataMap) {
+		System.out.printf("ISIN : %s%n",getISIN());
+		
 		Set<Integer> keySet = dataMap.keySet();
 		for (Integer key : keySet) {
 			System.out.println(dataMap.get(key).toString());
