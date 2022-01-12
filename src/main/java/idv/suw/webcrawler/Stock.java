@@ -6,6 +6,8 @@ import java.util.Date;
 
 public class Stock {
 	
+	//ISIN(International Securities Identification Number)
+	private String ISIN;
 	private Date date;
 	private double openingPrice;
 	private double highestPrice;
@@ -14,6 +16,19 @@ public class Stock {
 	private int transaction;
 	
 	public Stock() {}
+	
+	//ISIN(International Securities Identification Number)
+	public String getISIN() {
+		return ISIN;
+	}
+
+	public void setISIN(String ISIN) {
+		this.ISIN = ISIN;
+	}
+	
+	public void setISIN(Integer ISIN) {
+		this.ISIN = ISIN.toString();
+	}
 
 	//Date
 	public Date getDate() {
@@ -108,7 +123,7 @@ public class Stock {
 	
 	public String toString() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-		return "Date : " + sdf.format(getDate()) + " OpeningPrice : " + getOpeningPrice() + " HighestPrice : "
+		return "ISIN : " + getISIN() + "Date : " + sdf.format(getDate()) + " OpeningPrice : " + getOpeningPrice() + " HighestPrice : "
 				+ getHighestPrice() + " LowestPrice : " + getLowestPrice() + " ClosingPrice : "
 				+ getClosingPrice() + " Transaction : " + getTransaction();
 	}

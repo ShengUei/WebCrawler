@@ -3,7 +3,7 @@ package idv.suw.webcrawler;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+//import java.util.Set;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,15 +24,21 @@ public class TWSECrawler extends Crawler {
 	private final String url = "https://www.twse.com.tw/en/page/trading/exchange/STOCK_DAY.html";
 	//International Securities Identification Number
 	private String ISIN;
+	private DataBase database;
 	
 	public TWSECrawler() {}
 	
-	public TWSECrawler(String ISIN) {
-		this.ISIN = ISIN;
-	}
+//	public TWSECrawler(String ISIN) {
+//		this.ISIN = ISIN;
+//	}
+//	
+//	public TWSECrawler(Integer ISIN) {
+//		this.ISIN = ISIN.toString();
+//	}
 	
-	public TWSECrawler(Integer ISIN) {
-		this.ISIN = ISIN.toString();
+	public TWSECrawler(String ISIN, DataBase database) {
+		this.ISIN = ISIN;
+		this.database = database;
 	}
 
 	public String getISIN() {
@@ -45,6 +51,14 @@ public class TWSECrawler extends Crawler {
 	
 	public void setISIN(Integer ISIN) {
 		this.ISIN = ISIN.toString();
+	}
+
+	public DataBase getDatabase() {
+		return database;
+	}
+
+	public void setDatabase(DataBase database) {
+		this.database = database;
 	}
 
 	@Override
@@ -90,19 +104,23 @@ public class TWSECrawler extends Crawler {
 			
 			Map<Integer, Stock> dataMap = extractData(elements);
 			
-			//Test
-			String URL = "jdbc:sqlserver://localhost:1433;databaseName=stock;";
-			String userName = "test";
-			String password = "123456789";
-			DataBase test = new DataBase(URL, userName, password);
+			database.insertData(dataMap);
 			
-			test.insertData(dataMap);
-			//Test
+//			//Test
+//			String URL = "jdbc:sqlserver://localhost:1433;databaseName=stock;";
+//			String userName = "test";
+//			String password = "123456789";
+//			DataBase test = new DataBase(URL, userName, password);
+//			test.setTableName(getISIN());
+//			
+//			test.insertData(dataMap);
+//			//Test
 			
 		}catch (TimeoutException e) {
 			LogFile lf = new LogFile();
 			lf.logGenerate(e);
 			
+			System.out.println("ISIN is wrong");
 			System.out.println("No Result");
 		}
 	}
@@ -114,6 +132,7 @@ public class TWSECrawler extends Crawler {
 		for (int i = 1; i < row.size(); i++) {
 			map.put(i, new Stock());
 			
+			map.get(i).setISIN(this.ISIN);
 			map.get(i).setDate(row.get(i).select("td").get(0).text());
 			map.get(i).setOpeningPrice(row.get(i).select("td").get(3).text());
 			map.get(i).setHighestPrice(row.get(i).select("td").get(4).text());
@@ -125,14 +144,14 @@ public class TWSECrawler extends Crawler {
 		return map;
 	}
 	
-	public void showData(Map<Integer, Stock> dataMap) {
-		System.out.printf("ISIN : %s%n",getISIN());
-		
-		Set<Integer> keySet = dataMap.keySet();
-		for (Integer key : keySet) {
-			System.out.println(dataMap.get(key).toString());
-		}
-	}
+//	public void showData(Map<Integer, Stock> dataMap) {
+//		System.out.printf("ISIN : %s%n",getISIN());
+//		
+//		Set<Integer> keySet = dataMap.keySet();
+//		for (Integer key : keySet) {
+//			System.out.println(dataMap.get(key).toString());
+//		}
+//	}
 	
 
 }
