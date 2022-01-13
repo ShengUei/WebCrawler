@@ -24,45 +24,99 @@ public class TWSECrawler extends Crawler {
 	private final String url = "https://www.twse.com.tw/en/page/trading/exchange/STOCK_DAY.html";
 	//International Securities Identification Number
 	private String ISIN;
-	private DataBase database;
 	
-	public TWSECrawler() {}
+//	public TWSECrawler() {}
 	
-//	public TWSECrawler(String ISIN) {
-//		this.ISIN = ISIN;
-//	}
-//	
+	public TWSECrawler(String ISIN) {
+		this.ISIN = ISIN;
+	}
+	
 //	public TWSECrawler(Integer ISIN) {
 //		this.ISIN = ISIN.toString();
 //	}
+//	
+//	public TWSECrawler(String ISIN, DataBase database) {
+//		this.ISIN = ISIN;
+//		this.database = database;
+//	}
+//
+//	public String getISIN() {
+//		return ISIN;
+//	}
+//
+//	public void setISIN(String ISIN) {
+//		this.ISIN = ISIN;
+//	}
+//	
+//	public void setISIN(Integer ISIN) {
+//		this.ISIN = ISIN.toString();
+//	}
+//
+//	public DataBase getDatabase() {
+//		return database;
+//	}
+//
+//	public void setDatabase(DataBase database) {
+//		this.database = database;
+//	}
+
+//	@Override
+//	public void crawlerStart() {
+//		
+//		WebDriverManager.chromedriver().setup();
+//		
+//		ChromeOptions option = new ChromeOptions();
+//		
+//		WebDriver driver = new ChromeDriver(option.addArguments("headless"));
+//		driver.get(url);
+//		
+//		WebElement searchBox = driver.findElement(By.id("stockNo"));
+//		WebElement searchButton = driver.findElement(By.className("button"));
+//		
+//		searchBox.sendKeys(this.ISIN);
+//		
+//		try {
+//			WebElement wait = new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.elementToBeClickable(By.className("button")));
+//			if (wait != null) {
+//				System.out.println("Connected Successfully");
+//			}
+//			
+//			searchButton.click();
+//		} catch (TimeoutException e) {
+//			LogFile lf = new LogFile();
+//			lf.logGenerate(e);
+//			
+//			System.out.println("Connected Failure");
+//		}
+//		
+//		try {
+//			WebElement waitTable = new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(By.className("data-table")));	
+//			
+//			if (waitTable != null) {
+//				System.out.println("Web Load Completed");
+//			}
+//			
+//			Document doc = Jsoup.parse(driver.getPageSource());
+//			driver.quit();
+//			
+//			Elements elements = doc.select("div.data-table");
+//			
+//			Map<Integer, Stock> dataMap = extractData(elements);
+//			
+////			database.connectionSQL();
+////			database.insertData(dataMap);
+////			database.closeSQL();
+//			
+//		}catch (TimeoutException e) {
+//			LogFile lf = new LogFile();
+//			lf.logGenerate(e);
+//			
+//			System.out.println("ISIN is wrong");
+//			System.out.println("No Result");
+//		}
+//	}
 	
-	public TWSECrawler(String ISIN, DataBase database) {
-		this.ISIN = ISIN;
-		this.database = database;
-	}
-
-	public String getISIN() {
-		return ISIN;
-	}
-
-	public void setISIN(String ISIN) {
-		this.ISIN = ISIN;
-	}
-	
-	public void setISIN(Integer ISIN) {
-		this.ISIN = ISIN.toString();
-	}
-
-	public DataBase getDatabase() {
-		return database;
-	}
-
-	public void setDatabase(DataBase database) {
-		this.database = database;
-	}
-
-	@Override
-	public void crawlerStart(){
+	public Elements crawlerParseWeb() throws TimeoutException {
 		
 		WebDriverManager.chromedriver().setup();
 		
@@ -74,55 +128,26 @@ public class TWSECrawler extends Crawler {
 		WebElement searchBox = driver.findElement(By.id("stockNo"));
 		WebElement searchButton = driver.findElement(By.className("button"));
 		
-		searchBox.sendKeys(getISIN());
+		searchBox.sendKeys(this.ISIN);
 		
-		try {
-			WebElement wait = new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.elementToBeClickable(By.className("button")));
-			if (wait != null) {
-				System.out.println("Connected Successfully");
-			}
-			
-			searchButton.click();
-		} catch (TimeoutException e) {
-			LogFile lf = new LogFile();
-			lf.logGenerate(e);
-			
-			System.out.println("Connected Failure");
+		WebElement wait = new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.elementToBeClickable(By.className("button")));
+		
+		if (wait != null) {
+			System.out.println("Connected Successfully");
 		}
 		
-		try {
-			WebElement waitTable = new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(By.className("data-table")));	
-			
-			if (waitTable != null) {
-				System.out.println("Web Load Completed");
-			}
-			
-			Document doc = Jsoup.parse(driver.getPageSource());
-			driver.quit();
-			
-			Elements elements = doc.select("div.data-table");
-			
-			Map<Integer, Stock> dataMap = extractData(elements);
-			
-			database.insertData(dataMap);
-			
-//			//Test
-//			String URL = "jdbc:sqlserver://localhost:1433;databaseName=stock;";
-//			String userName = "test";
-//			String password = "123456789";
-//			DataBase test = new DataBase(URL, userName, password);
-//			test.setTableName(getISIN());
-//			
-//			test.insertData(dataMap);
-//			//Test
-			
-		}catch (TimeoutException e) {
-			LogFile lf = new LogFile();
-			lf.logGenerate(e);
-			
-			System.out.println("ISIN is wrong");
-			System.out.println("No Result");
+		searchButton.click();
+		
+		WebElement waitTable = new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(By.className("data-table")));	
+		
+		if (waitTable != null) {
+			System.out.println("Web Load Completed");
 		}
+		
+		Document doc = Jsoup.parse(driver.getPageSource());
+		driver.quit();
+		
+		return doc.select("div.data-table");
 	}
 	
 	public Map<Integer, Stock> extractData(Elements elements) {

@@ -1,7 +1,6 @@
 package idv.suw.webcrawler;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,6 +16,7 @@ public class DataBase {
 	private String password;
 	//tableName = ISIN(International Securities Identification Number)
 	private String tableName;
+	private Connection conn;
 	
 	public DataBase() {}
 	
@@ -24,38 +24,38 @@ public class DataBase {
 //		this.URL = URL;
 //	}
 
-	public DataBase(String URL, String username, String password) {
-		this.URL = URL;
-		this.username = username;
-		this.password = password;
-	}
+//	public DataBase(String URL, String username, String password) {
+//		this.URL = URL;
+//		this.username = username;
+//		this.password = password;
+//	}
 	
 	//URL
-	public String getURL() {
-		return URL;
-	}
-
-	public void setURL(String URL) {
-		this.URL = URL;
-	}
+//	public String getURL() {
+//		return URL;
+//	}
+//
+//	public void setURL(String URL) {
+//		this.URL = URL;
+//	}
 	
 	//userName
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
+//	public String getUsername() {
+//		return username;
+//	}
+//
+//	public void setUsername(String username) {
+//		this.username = username;
+//	}
 	
 	//password
-	private String getPassword() {
-		return password;
-	}
-	
-	public void setPassword(String password) {
-		this.password = password;
-	}
+//	private String getPassword() {
+//		return password;
+//	}
+//	
+//	public void setPassword(String password) {
+//		this.password = password;
+//	}
 	
 	//tableName
 	public String getTableName() {
@@ -66,140 +66,101 @@ public class DataBase {
 		this.tableName = tableName;
 	}
 	
-	public int showData() {
+	public void connectionSQL() throws SQLException {
+		this.URL = "jdbc:sqlserver://localhost:1433;databaseName=stock";
+		this.username = "test";
+		this.password = "123456789";
+		this.conn = DriverManager.getConnection(this.URL, this.username, this.password);
+		
+		boolean status = !conn.isClosed();
+		
+		if (status) {
+			System.out.println("Connection Successfully");
+		}
+		
+	}
+	
+	public void closeSQL() throws SQLException {
+		if (conn != null) {
+			conn.close();
+			System.out.println("Connection Closed");
+		}
+	}
+	
+	public void showData() throws SQLException {
 		String select = "*";
-		String selectTable = "SELECT " + select + " FROM " + getTableName();
+		String selectTable = "SELECT " + select + " FROM " + tableName;
 		
-		try (Connection conn = DriverManager.getConnection(getURL(),getUsername(),getPassword());
-				PreparedStatement preState = conn.prepareStatement(selectTable);
-				) {
-			
-			DatabaseMetaData meta = conn.getMetaData();
-			ResultSet tableExists = meta.getTables(null, null, getTableName(), null);
-			
-			if (tableExists.next()) {
-				ResultSet rs = preState.executeQuery();
-				
-				while (rs.next()) {
-					System.out.println(rs.getString("date") + ", " + rs.getString("openingPrice") + ", " + rs.getString("HighestPrice")
-					+ ", " + rs.getString("LowestPrice") + ", " + rs.getString("ClosingPrice") + ", " + rs.getString("Transaction"));
-				}
-				
-				return 1;
-				
-			} else {
-				System.out.println("No data");
-				return 0;
-			}
-			
-		} catch (SQLException e) {
-			LogFile lof = new LogFile();
-			lof.logGenerate(e);
-			
-			System.out.println("SQL Connected Failure");
-			return -1;
+		PreparedStatement preState = conn.prepareStatement(selectTable);
+		
+		ResultSet rs = preState.executeQuery();
+		
+		while (rs.next()) {
+			System.out.println(rs.getString("date") + ", " + rs.getString("openingPrice") + ", " + rs.getString("HighestPrice")
+			+ ", " + rs.getString("LowestPrice") + ", " + rs.getString("ClosingPrice") + ", " + rs.getString("Transaction"));
 		}
+		
+		preState.close();
 		
 	}
 	
-//	public void insertData(Stock data) {
-//		setTableName("testTable");
-//		String insertTable = "INSERT INTO " + getTableName() + " VALUES (?, ?, ?, ?, ?, ?)";
-//		
-//		try (Connection conn = DriverManager.getConnection(getURL(),getUsername(),getPassword());
-//				PreparedStatement preState = conn.prepareStatement(insertTable);
-//				) {
-//			
-//			System.out.println("SQL Connected Successfully");
-//			
-//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-//			
-//			preState.setString(1, sdf.format(data.getDate()));
-//			preState.setDouble(2, data.getOpeningPrice());
-//			preState.setDouble(3, data.getHighestPrice());
-//			preState.setDouble(4, data.getLowestPrice());
-//			preState.setDouble(5, data.getClosingPrice());
-//			preState.setInt(6, data.getTransaction());
-//			
-//			int insertResult = preState.executeUpdate();
-//			
-//			if (insertResult != 0) {
-//				System.out.println("SQL INSERT Successfully");
-//				System.out.println(insertResult + " data INSERT INTO table");
-//			} else {
-//				System.out.println("SQL INSERT Failure");	
-//			}
-//			
-//		} catch (SQLException e) {
-//			LogFile lof = new LogFile();
-//			lof.logGenerate(e);
-//			
-//			System.out.println("SQL Connected Failure");
-//		}
-//		
-//	}
-	
-	public void insertData(Map<Integer, Stock> data) {
-		String insertTable = "INSERT INTO " + getTableName() + " VALUES (?, ?, ?, ?, ?, ?)";
+	public void insertData(Map<Integer, Stock> data) throws SQLException {
+		String insertTable = "INSERT INTO " + this.tableName + " VALUES (?, ?, ?, ?, ?, ?)";
 		
-		try (Connection conn = DriverManager.getConnection(getURL(),getUsername(),getPassword());
-				PreparedStatement preState = conn.prepareStatement(insertTable);
-				) {
-			
-			System.out.println("SQL Connected Successfully");
-			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-			
-			Set<Integer> keySet = data.keySet();
-			for (int key : keySet) {
-				preState.setString(1, sdf.format(data.get(key).getDate()));
-				preState.setDouble(2, data.get(key).getOpeningPrice());
-				preState.setDouble(3, data.get(key).getHighestPrice());
-				preState.setDouble(4, data.get(key).getLowestPrice());
-				preState.setDouble(5, data.get(key).getClosingPrice());
-				preState.setInt(6, data.get(key).getTransaction());
-				
-				preState.addBatch();
-			}
-			
-			int[] insertResult = preState.executeBatch();
-			
-			if (insertResult.length != 0) {
-				System.out.println("SQL INSERT Successfully");
-			} else {
-				System.out.println("SQL INSERT Failure");	
-			}
-			
-		} catch (SQLException e) {
-			LogFile lof = new LogFile();
-			lof.logGenerate(e);
-			
-			System.out.println("SQL Connected Failure");
+		PreparedStatement preState = conn.prepareStatement(insertTable);
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+		
+		Set<Integer> keySet = data.keySet();
+		for (int key : keySet) {
+			preState.setString(1, sdf.format(data.get(key).getDate()));
+			preState.setDouble(2, data.get(key).getOpeningPrice());
+			preState.setDouble(3, data.get(key).getHighestPrice());
+			preState.setDouble(4, data.get(key).getLowestPrice());
+			preState.setDouble(5, data.get(key).getClosingPrice());
+			preState.setInt(6, data.get(key).getTransaction());
 		}
+		
+		preState.addBatch();
+		
+		int[] insertResult = preState.executeBatch();
+		
+		if (insertResult.length != 0) {
+			System.out.println("SQL INSERT Successfully");
+			
+		} else {
+			System.out.println("SQL INSERT Failure");	
+			
+		}
+		
+		preState.close();
 		
 	}
 	
-	public void createTable() {
-		String createTable = "CREATE TABLE " + getTableName() + " (date date, openingPrice decimal(18, 2),"
-																	+ " highestPrice decimal(18, 2), lowestPrice decimal(18, 2),"
-																	+ " closingPrice decimal(18, 2), [transaction] int)";
+	public void createTable() throws SQLException {
+		String createTable = "CREATE TABLE " + this.tableName
+												+ " ( "
+												+ " date DATE NOT NULL,"
+												+ " openingprice DECIMAL(18, 2) NOT NULL,"
+												+ " highestprice DECIMAL(18, 2) NOT NULL,"
+												+ " lowestprice DECIMAL(18, 2) NOT NULL,"
+												+ " closingprice DECIMAL(18, 2) NOT NULL,"
+												+ " number_of_Transaction INT NOT NULL"
+												+ " ) ";
 		
-		try (Connection conn = DriverManager.getConnection(getURL(),getUsername(),getPassword());
-				PreparedStatement preState = conn.prepareStatement(createTable);
-				) {
-			
-			preState.executeUpdate();
-			
+		PreparedStatement preState = conn.prepareStatement(createTable);
+		int statuts = preState.executeUpdate();
+		
+		if (statuts == 0) {
 			System.out.println("Create Table Successfully");
 			
-		} catch(SQLException e) {
-			LogFile lof = new LogFile();
-			lof.logGenerate(e);
-			
+		} else {
 			System.out.println("Create Table Failure");
+			
 		}
 		
+		preState.close();
+		
 	}
-	
 
 }

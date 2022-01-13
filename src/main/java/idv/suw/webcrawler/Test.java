@@ -62,12 +62,12 @@ public class Test {
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
-		String URL = "jdbc:sqlserver://localhost:1433;databaseName=stock;";
-//		String URL = "jdbc:sqlserver://localhost:1433;databaseName=demo;";
-		String userName = "test";
-		String password = "123456789";
-		DataBase test = new DataBase(URL, userName, password);
-		test.createTable();
+//		String URL = "jdbc:sqlserver://localhost:1433;databaseName=stock;";
+////		String URL = "jdbc:sqlserver://localhost:1433;databaseName=demo;";
+//		String userName = "test";
+//		String password = "123456789";
+//		DataBase test = new DataBase(URL, userName, password);
+//		test.createTable();
 //		
 //		Stock testStock = new Stock();
 //		testStock.setDate("2022/01/12");
