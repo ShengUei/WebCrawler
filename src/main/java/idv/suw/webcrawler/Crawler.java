@@ -14,6 +14,4 @@ public class Crawler {
 
 	public Crawler() {}
 
-	public void crawlerStart() {}
-
 }

@@ -33,7 +33,6 @@ public class MoMoCrawler extends Crawler {
 		return searchTarget;
 	}
 	
-	@Override
 	public void crawlerStart(){
 		
 		WebDriverManager.chromedriver().setup();

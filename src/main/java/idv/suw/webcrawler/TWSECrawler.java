@@ -25,99 +25,11 @@ public class TWSECrawler extends Crawler {
 	//International Securities Identification Number
 	private String ISIN;
 	
-//	public TWSECrawler() {}
-	
 	public TWSECrawler(String ISIN) {
 		this.ISIN = ISIN;
 	}
 	
-//	public TWSECrawler(Integer ISIN) {
-//		this.ISIN = ISIN.toString();
-//	}
-//	
-//	public TWSECrawler(String ISIN, DataBase database) {
-//		this.ISIN = ISIN;
-//		this.database = database;
-//	}
-//
-//	public String getISIN() {
-//		return ISIN;
-//	}
-//
-//	public void setISIN(String ISIN) {
-//		this.ISIN = ISIN;
-//	}
-//	
-//	public void setISIN(Integer ISIN) {
-//		this.ISIN = ISIN.toString();
-//	}
-//
-//	public DataBase getDatabase() {
-//		return database;
-//	}
-//
-//	public void setDatabase(DataBase database) {
-//		this.database = database;
-//	}
-
-//	@Override
-//	public void crawlerStart() {
-//		
-//		WebDriverManager.chromedriver().setup();
-//		
-//		ChromeOptions option = new ChromeOptions();
-//		
-//		WebDriver driver = new ChromeDriver(option.addArguments("headless"));
-//		driver.get(url);
-//		
-//		WebElement searchBox = driver.findElement(By.id("stockNo"));
-//		WebElement searchButton = driver.findElement(By.className("button"));
-//		
-//		searchBox.sendKeys(this.ISIN);
-//		
-//		try {
-//			WebElement wait = new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.elementToBeClickable(By.className("button")));
-//			if (wait != null) {
-//				System.out.println("Connected Successfully");
-//			}
-//			
-//			searchButton.click();
-//		} catch (TimeoutException e) {
-//			LogFile lf = new LogFile();
-//			lf.logGenerate(e);
-//			
-//			System.out.println("Connected Failure");
-//		}
-//		
-//		try {
-//			WebElement waitTable = new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(By.className("data-table")));	
-//			
-//			if (waitTable != null) {
-//				System.out.println("Web Load Completed");
-//			}
-//			
-//			Document doc = Jsoup.parse(driver.getPageSource());
-//			driver.quit();
-//			
-//			Elements elements = doc.select("div.data-table");
-//			
-//			Map<Integer, Stock> dataMap = extractData(elements);
-//			
-////			database.connectionSQL();
-////			database.insertData(dataMap);
-////			database.closeSQL();
-//			
-//		}catch (TimeoutException e) {
-//			LogFile lf = new LogFile();
-//			lf.logGenerate(e);
-//			
-//			System.out.println("ISIN is wrong");
-//			System.out.println("No Result");
-//		}
-//	}
-	
-	public Elements crawlerParseWeb() throws TimeoutException {
-		
+	public Elements crawlerStart() throws TimeoutException {
 		WebDriverManager.chromedriver().setup();
 		
 		ChromeOptions option = new ChromeOptions();
@@ -168,16 +80,6 @@ public class TWSECrawler extends Crawler {
 		}
 		return map;
 	}
-	
-//	public void showData(Map<Integer, Stock> dataMap) {
-//		System.out.printf("ISIN : %s%n",getISIN());
-//		
-//		Set<Integer> keySet = dataMap.keySet();
-//		for (Integer key : keySet) {
-//			System.out.println(dataMap.get(key).toString());
-//		}
-//	}
-	
 
 }
 

@@ -9,32 +9,36 @@ import org.openqa.selenium.TimeoutException;
 public class UserInterface {
 
 	public static void main(String[] args) {
+		
+		//愈實作方法
 		/*請輸入欲查詢的股票代號(ISIN)*/
+		
+		//愈實作方法
+		/*ISIN驗證*/
 		
 		//Test
 		String ISIN = "2330";
 		
-		DataBase test = new DataBase();
-		
-		test.setTableName(ISIN);
+		DataBase test = new DataBase(ISIN);
 		
 		try {
 			test.connectionSQL();
-			test.showData();	
-		} catch (SQLException e) {
-			try {
-				TWSECrawler crawler = new TWSECrawler(ISIN);
-//				crawler.crawlerStart();
-				
-				Elements elements = crawler.crawlerParseWeb();
-				Map<Integer, Stock> dataMap = crawler.extractData(elements);
-				
+			boolean tableExisted = test.queryData();
+			
+			if (!tableExisted) {
 				test.createTable();
-				test.insertData(dataMap);
 				
-			} catch (TimeoutException | SQLException e1) {
-				e1.printStackTrace();
+				TWSECrawler crawler = new TWSECrawler(ISIN);
+				
+				Elements elements = crawler.crawlerStart();
+				Map<Integer, Stock> map = crawler.extractData(elements);
+				
+				test.insertData(map);
 			}
+			
+		} catch (SQLException | TimeoutException e) {
+			e.printStackTrace();
+			
 		} finally {
 			try {
 				test.closeSQL();
@@ -42,25 +46,6 @@ public class UserInterface {
 				e.printStackTrace();
 			}
 		}
-		
-		
-//		DatabaseMetaData meta = conn.getMetaData();
-//		ResultSet tableExists = meta.getTables(null, null, tableName, null);
-//		
-//		if (tableExists.next()) {
-//			
-//			
-//		} else {
-//			System.out.println(tableName + " table isn't exsit");
-//		}
-		
-//		int dataExists = test.showData();
-//		
-//		if (dataExists == 0) {
-//			test.createTable();
-//			TWSECrawler crawler = new TWSECrawler(ISIN, test);
-//			crawler.crawlerStart();
-//		}
 
 	}
 

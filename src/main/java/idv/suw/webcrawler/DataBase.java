@@ -11,66 +11,22 @@ import java.util.Set;
 
 public class DataBase {
 	
-	private String URL;
+	private String url;
 	private String username;
 	private String password;
 	//tableName = ISIN(International Securities Identification Number)
 	private String tableName;
 	private Connection conn;
 	
-	public DataBase() {}
-	
-//	public DataBase(String URL) {
-//		this.URL = URL;
-//	}
-
-//	public DataBase(String URL, String username, String password) {
-//		this.URL = URL;
-//		this.username = username;
-//		this.password = password;
-//	}
-	
-	//URL
-//	public String getURL() {
-//		return URL;
-//	}
-//
-//	public void setURL(String URL) {
-//		this.URL = URL;
-//	}
-	
-	//userName
-//	public String getUsername() {
-//		return username;
-//	}
-//
-//	public void setUsername(String username) {
-//		this.username = username;
-//	}
-	
-	//password
-//	private String getPassword() {
-//		return password;
-//	}
-//	
-//	public void setPassword(String password) {
-//		this.password = password;
-//	}
-	
-	//tableName
-	public String getTableName() {
-		return tableName;
-	}
-
-	public void setTableName(String tableName) {
+	public DataBase(String tableName) {
 		this.tableName = tableName;
 	}
 	
 	public void connectionSQL() throws SQLException {
-		this.URL = "jdbc:sqlserver://localhost:1433;databaseName=stock";
+		this.url = "jdbc:sqlserver://localhost:1433;databaseName=stock";
 		this.username = "test";
 		this.password = "123456789";
-		this.conn = DriverManager.getConnection(this.URL, this.username, this.password);
+		this.conn = DriverManager.getConnection(this.url, this.username, this.password);
 		
 		boolean status = !conn.isClosed();
 		
@@ -87,27 +43,40 @@ public class DataBase {
 		}
 	}
 	
-	public void showData() throws SQLException {
-		String select = "*";
-		String selectTable = "SELECT " + select + " FROM " + tableName;
+	public boolean queryData() throws SQLException {
+		String queryStatement = "SELECT * FROM " + tableName;
 		
-		PreparedStatement preState = conn.prepareStatement(selectTable);
+		PreparedStatement preState = conn.prepareStatement(queryStatement);
 		
 		ResultSet rs = preState.executeQuery();
 		
-		while (rs.next()) {
-			System.out.println(rs.getString("date") + ", " + rs.getString("openingPrice") + ", " + rs.getString("HighestPrice")
-			+ ", " + rs.getString("LowestPrice") + ", " + rs.getString("ClosingPrice") + ", " + rs.getString("Transaction"));
+		if (rs != null) {
+			while (rs.next()) {
+				System.out.println(rs.getString("date") + ", " + rs.getString("openingPrice") + ", " + rs.getString("HighestPrice")
+				+ ", " + rs.getString("LowestPrice") + ", " + rs.getString("ClosingPrice") + ", " + rs.getString("Transaction"));
+			}
+			
+			rs.close();
+			preState.close();
+			
+			return true;
+			
+		} else {
+			preState.close();
+			return false;
 		}
-		
-		preState.close();
 		
 	}
 	
 	public void insertData(Map<Integer, Stock> data) throws SQLException {
-		String insertTable = "INSERT INTO " + this.tableName + " VALUES (?, ?, ?, ?, ?, ?)";
+		String insertSratemen = "INSERT INTO " + this.tableName + "(date,"
+																+ " openingprice,"
+																+ " highestprice,"
+																+ " lowestprice,"
+																+ " closingprice,"
+																+ " number_of_transaction)" + " VALUES (?, ?, ?, ?, ?, ?)";
 		
-		PreparedStatement preState = conn.prepareStatement(insertTable);
+		PreparedStatement preState = conn.prepareStatement(insertSratemen);
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 		
@@ -138,17 +107,18 @@ public class DataBase {
 	}
 	
 	public void createTable() throws SQLException {
-		String createTable = "CREATE TABLE " + this.tableName
+		String createStatement = "CREATE TABLE " + this.tableName
 												+ " ( "
+												+ " id INT PRIMARY KEY IDENTITY(1,1),"
 												+ " date DATE NOT NULL,"
 												+ " openingprice DECIMAL(18, 2) NOT NULL,"
 												+ " highestprice DECIMAL(18, 2) NOT NULL,"
 												+ " lowestprice DECIMAL(18, 2) NOT NULL,"
 												+ " closingprice DECIMAL(18, 2) NOT NULL,"
-												+ " number_of_Transaction INT NOT NULL"
+												+ " number_of_transaction INT NOT NULL"
 												+ " ) ";
 		
-		PreparedStatement preState = conn.prepareStatement(createTable);
+		PreparedStatement preState = conn.prepareStatement(createStatement);
 		int statuts = preState.executeUpdate();
 		
 		if (statuts == 0) {
