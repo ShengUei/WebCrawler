@@ -49,6 +49,12 @@
     	<artifactId>webdrivermanager</artifactId>
     	<version>5.0.3</version>
 	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.json/json -->
+	<dependency>
+    	<groupId>org.json</groupId>
+    	<artifactId>json</artifactId>
+    	<version>20211205</version>
+	</dependency>
   </dependencies>
 
   <build>

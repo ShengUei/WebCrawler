@@ -7,9 +7,22 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+import io.opentelemetry.exporter.logging.SystemOutLogExporter;
 
 public class Test {
 
@@ -80,15 +93,58 @@ public class Test {
 //		test.insertData(testStock);
 //		test.showData();
 		
-		Stock stock = new Stock();
-		Map<Integer,Stock> map = new HashMap<Integer,Stock>();
+//		Stock stock = new Stock();
+//		Map<Integer,Stock> map = new HashMap<Integer,Stock>();
+//		
+//		if (map instanceof Stock) {
+//			System.out.println("map instanceof Stock = " + true);
+//		} else {
+//			System.out.println("map instanceof Stock = " + false);
+//			
+//		}
+		Date time = Calendar.getInstance().getTime();//1642167074102
+		String ISIN = "2330";
+		String ISIN1 = "2303";
+		String url = "https://tw.stock.yahoo.com/_td-stock/api/resource/FinanceChartService.ApacLibraCharts;autoRefresh=" + time.toString() + ";symbols=%5B%22" + ISIN + ".TW%22%5D;type=tick?bkt=&device=desktop&ecma=modern&feature=ecmaModern%2CuseVersionSwitch%2CuseNewQuoteTabColor&intl=tw&lang=zh-Hant-TW&partner=none&prid=aeg8ts1gu2uk6&region=TW&site=finance&tz=Asia%2FTaipei&ver=1.2.1214&returnMeta=true";
+		String url1 = "https://tw.stock.yahoo.com/_td-stock/api/resource/FinanceChartService.ApacLibraCharts;autoRefresh=" + time.toString() + ";symbols=%5B%22" + ISIN1 + ".TW%22%5D;type=tick?bkt=&device=desktop&ecma=modern&feature=ecmaModern%2CuseVersionSwitch%2CuseNewQuoteTabColor&intl=tw&lang=zh-Hant-TW&partner=none&prid=aeg8ts1gu2uk6&region=TW&site=finance&tz=Asia%2FTaipei&ver=1.2.1214&returnMeta=true";
 		
-		if (map instanceof Stock) {
-			System.out.println("map instanceof Stock = " + true);
-		} else {
-			System.out.println("map instanceof Stock = " + false);
+		WebDriverManager.chromedriver().setup();
+		
+		ChromeOptions option = new ChromeOptions();
+		
+		WebDriver driver = new ChromeDriver(option.addArguments("headless"));
+		
+		String[] str = {url,url1};
+		
+		int i = 0;
+		while (i < str.length) {
+			driver.get(str[i]);
 			
+			String pageSource = driver.getPageSource();
+			
+			Document doc = Jsoup.parse(pageSource);
+			String json = doc.select("pre").text();
+			
+			JSONObject jsonObject = new JSONObject(json);
+			
+			JSONArray jsonArray = jsonObject.getJSONArray("data");
+			
+//			JSONArray timestamp = jsonObject.getJSONArray("timestamp");
+//			JSONArray open = jsonObject.getJSONArray("open");
+//			JSONArray volume = jsonObject.getJSONArray("volume");
+			
+			System.out.println("jsonArray = " + jsonArray);
+			
+//			System.out.println(i + " : "+ timestamp);
+//			System.out.println(i + " : "+ open);
+//			System.out.println(i + " : "+ volume);
+			
+			i++;
 		}
+		
+		
+		driver.quit();
+		
 
 	}
 
