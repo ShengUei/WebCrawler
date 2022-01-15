@@ -55,8 +55,10 @@ public class Test {
 		//1641865209359
 		//1641866454627
 		//1641866701772
-		
-//		Date date1 = new Date(Long.parseLong("1641867001903"));
+		//1642122000
+//		
+//		Date date1 = new Date(Long.parseLong("1642122000000"));
+//		System.out.println(Long.parseLong("1642122000"));
 //		System.out.println(date1);
 //		Date date2 = new Date(Long.parseLong("1641866709465"));
 //		System.out.println(date2);
@@ -102,50 +104,49 @@ public class Test {
 //			System.out.println("map instanceof Stock = " + false);
 //			
 //		}
-		Date time = Calendar.getInstance().getTime();//1642167074102
-		String ISIN = "2330";
-		String ISIN1 = "2303";
-		String url = "https://tw.stock.yahoo.com/_td-stock/api/resource/FinanceChartService.ApacLibraCharts;autoRefresh=" + time.toString() + ";symbols=%5B%22" + ISIN + ".TW%22%5D;type=tick?bkt=&device=desktop&ecma=modern&feature=ecmaModern%2CuseVersionSwitch%2CuseNewQuoteTabColor&intl=tw&lang=zh-Hant-TW&partner=none&prid=aeg8ts1gu2uk6&region=TW&site=finance&tz=Asia%2FTaipei&ver=1.2.1214&returnMeta=true";
-		String url1 = "https://tw.stock.yahoo.com/_td-stock/api/resource/FinanceChartService.ApacLibraCharts;autoRefresh=" + time.toString() + ";symbols=%5B%22" + ISIN1 + ".TW%22%5D;type=tick?bkt=&device=desktop&ecma=modern&feature=ecmaModern%2CuseVersionSwitch%2CuseNewQuoteTabColor&intl=tw&lang=zh-Hant-TW&partner=none&prid=aeg8ts1gu2uk6&region=TW&site=finance&tz=Asia%2FTaipei&ver=1.2.1214&returnMeta=true";
-		
-		WebDriverManager.chromedriver().setup();
-		
-		ChromeOptions option = new ChromeOptions();
-		
-		WebDriver driver = new ChromeDriver(option.addArguments("headless"));
-		
-		String[] str = {url,url1};
-		
-		int i = 0;
-		while (i < str.length) {
-			driver.get(str[i]);
-			
-			String pageSource = driver.getPageSource();
-			
-			Document doc = Jsoup.parse(pageSource);
-			String json = doc.select("pre").text();
-			
-			JSONObject jsonObject = new JSONObject(json);
-			
-			JSONArray jsonArray = jsonObject.getJSONArray("data");
+//		Date time = Calendar.getInstance().getTime();//1642167074102
+//		String ISIN = "2330";
+//		String ISIN1 = "2303";
+//		String url = "https://tw.stock.yahoo.com/_td-stock/api/resource/FinanceChartService.ApacLibraCharts;autoRefresh=" + time.toString() + ";symbols=%5B%22" + ISIN + ".TW%22%5D;type=tick?bkt=&device=desktop&ecma=modern&feature=ecmaModern%2CuseVersionSwitch%2CuseNewQuoteTabColor&intl=tw&lang=zh-Hant-TW&partner=none&prid=aeg8ts1gu2uk6&region=TW&site=finance&tz=Asia%2FTaipei&ver=1.2.1214&returnMeta=true";
+//		String url1 = "https://tw.stock.yahoo.com/_td-stock/api/resource/FinanceChartService.ApacLibraCharts;autoRefresh=" + time.toString() + ";symbols=%5B%22" + ISIN1 + ".TW%22%5D;type=tick?bkt=&device=desktop&ecma=modern&feature=ecmaModern%2CuseVersionSwitch%2CuseNewQuoteTabColor&intl=tw&lang=zh-Hant-TW&partner=none&prid=aeg8ts1gu2uk6&region=TW&site=finance&tz=Asia%2FTaipei&ver=1.2.1214&returnMeta=true";
+//		
+//		WebDriverManager.chromedriver().setup();
+//		
+//		ChromeOptions option = new ChromeOptions();
+//		
+//		WebDriver driver = new ChromeDriver(option.addArguments("headless"));
+//		
+//		String[] str = {url,url1};
+//		
+//		int i = 0;
+//		while (i < str.length) {
+//			driver.get(str[i]);
+//			
+//			String pageSource = driver.getPageSource();
+//			
+//			Document doc = Jsoup.parse(pageSource);
+//			String json = doc.select("pre").text();
+//			
+//			JSONObject jsonObject = new JSONObject(json);
+//			
+//			JSONArray jsonArray = jsonObject.getJSONArray("data");
 			
 //			JSONArray timestamp = jsonObject.getJSONArray("timestamp");
 //			JSONArray open = jsonObject.getJSONArray("open");
 //			JSONArray volume = jsonObject.getJSONArray("volume");
 			
-			System.out.println("jsonArray = " + jsonArray);
+//			System.out.println("jsonArray = " + jsonArray);
 			
 //			System.out.println(i + " : "+ timestamp);
 //			System.out.println(i + " : "+ open);
 //			System.out.println(i + " : "+ volume);
-			
-			i++;
-		}
-		
-		
-		driver.quit();
-		
-
+//			
+//			i++;
+//		}
+//		
+//		
+//		driver.quit();
+//		
 	}
 
 }
