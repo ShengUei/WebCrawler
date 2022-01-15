@@ -44,7 +44,7 @@ public class DataBase {
 	}
 	
 	public boolean queryData() throws SQLException {
-		String queryStatement = "SELECT * FROM " + tableName;
+		String queryStatement = "SELECT * FROM " + this.tableName;
 		
 		PreparedStatement preState = conn.prepareStatement(queryStatement);
 		
@@ -119,6 +119,7 @@ public class DataBase {
 												+ " ) ";
 		
 		PreparedStatement preState = conn.prepareStatement(createStatement);
+		preState.setString(1,this.tableName.toString());
 		int statuts = preState.executeUpdate();
 		
 		if (statuts == 0) {

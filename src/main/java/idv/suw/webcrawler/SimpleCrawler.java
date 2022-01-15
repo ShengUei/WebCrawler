@@ -1,6 +1,7 @@
 package idv.suw.webcrawler;
 
 import java.time.Duration;
+import java.util.Timer;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -22,27 +23,27 @@ public class SimpleCrawler {
 		
 		ChromeOptions option = new ChromeOptions();
 		
-		WebDriver driver = new ChromeDriver(option.addArguments("headless"));
-		driver.get("https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=3590732");
+		WebDriver driver = new ChromeDriver();
+		driver.get("https://mis.twse.com.tw/stock/fibest.jsp?stock=2330");
 		
-		WebElement wait = new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(By.id("productForm")));
-		
-		if (wait != null) {
-			System.out.println("Web loading complete");
-		}
-		
+//		WebElement wait = new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(By.id("productForm")));
+//		
+//		if (wait != null) {
+//			System.out.println("Web loading complete");
+//		}
+//		
 		String pageSource = driver.getPageSource();
-		
-		driver.quit();
-		
-		Document doc = Jsoup.parse(pageSource);
-		
-		Elements elements = doc.getElementsByClass("prdnoteArea");
-		
-		String title = elements.get(0).text();
-		
-		System.out.println("title = " + title);
-		
+//		
+//		driver.quit();
+//		
+//		Document doc = Jsoup.parse(pageSource);
+//		
+//		Elements elements = doc.getElementsByClass("prdnoteArea");
+//		
+//		String title = elements.get(0).text();
+//		
+//		System.out.println("title = " + title);
+//		
 		
 	}
 

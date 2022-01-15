@@ -17,35 +17,44 @@ public class UserInterface {
 		/*ISIN驗證*/
 		
 		//Test
-		String ISIN = "2330";
+		String ISIN = "testTable2";
 		
 		DataBase test = new DataBase(ISIN);
 		
 		try {
 			test.connectionSQL();
 			boolean tableExisted = test.queryData();
-			
-			if (!tableExisted) {
-				test.createTable();
-				
-				TWSECrawler crawler = new TWSECrawler(ISIN);
-				
-				Elements elements = crawler.crawlerStart();
-				Map<Integer, Stock> map = crawler.extractData(elements);
-				
-				test.insertData(map);
-			}
-			
-		} catch (SQLException | TimeoutException e) {
+//			test.createTable();
+			System.out.println("tableExisted = " + tableExisted);
+		} catch (SQLException e) {
 			e.printStackTrace();
-			
-		} finally {
-			try {
-				test.closeSQL();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
+		
+//		try {
+//			test.connectionSQL();
+//			boolean tableExisted = test.queryData();
+//			
+//			if (!tableExisted) {
+//				test.createTable();
+//				
+//				TWSECrawler crawler = new TWSECrawler(ISIN);
+//				
+//				Elements elements = crawler.crawlerStart();
+//				Map<Integer, Stock> map = crawler.extractData(elements);
+//				
+//				test.insertData(map);
+//			}
+//			
+//		} catch (SQLException | TimeoutException e) {
+//			e.printStackTrace();
+//			
+//		} finally {
+//			try {
+//				test.closeSQL();
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
+//		}
 
 	}
 
