@@ -54,5 +54,9 @@ public class Stock {
 	public String toString() {
 		return "dateTime: " + dateTime + ", " + "price: " + price + ", " + "volume: " + volume;
 	}
+	
+	public String toCsvString() {
+		return dateTime + ", " + price + ", " + volume;
+	}
 
 }

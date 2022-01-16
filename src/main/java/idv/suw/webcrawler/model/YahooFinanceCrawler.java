@@ -11,14 +11,14 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.openqa.selenium.WebDriver;
 
-import idv.suw.webcrawler.util.chromeDriverFactory;
+import idv.suw.webcrawler.util.ChromeDriverFactory;
 
 public class YahooFinanceCrawler {
 	
 	private WebDriver driver;
 	
 	public YahooFinanceCrawler() {
-		this.driver = chromeDriverFactory.getDriver();
+		this.driver = ChromeDriverFactory.getDriver();
 	}
 	
 	public Document getDoc(String ISIN) {

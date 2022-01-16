@@ -6,7 +6,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-public class chromeDriverFactory {
+public class ChromeDriverFactory {
 	
 	private static final WebDriver driver = createChromeDriver();
 	

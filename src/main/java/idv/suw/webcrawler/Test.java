@@ -56,7 +56,16 @@ public class Test {
 		//1641866454627
 		//1641866701772
 		//1642122000
-//		
+		//1642138080,1642138200
+		
+		long a = 1642138080000L;
+		long b = 1642138200000L;
+		
+		Date date1 = new Date(a);
+		Date date2 = new Date(b);
+		System.out.println("1642138080 = " + date1);
+		System.out.println("1642138200 = " + date2);
+		
 //		Date date1 = new Date(Long.parseLong("1642122000000"));
 //		System.out.println(Long.parseLong("1642122000"));
 //		System.out.println(date1);
