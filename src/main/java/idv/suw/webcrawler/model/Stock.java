@@ -1,5 +1,6 @@
 package idv.suw.webcrawler.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Stock {
@@ -52,11 +53,17 @@ public class Stock {
 	}
 	
 	public String toString() {
-		return "dateTime: " + dateTime + ", " + "price: " + price + ", " + "volume: " + volume;
+		SimpleDateFormat sdfByDate = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdfByTime = new SimpleDateFormat("HH:mm:ss");
+		
+		return "date: " + sdfByDate.format(dateTime) + ", " + "time: " + sdfByTime.format(dateTime) + "price: " + price + ", " + "volume: " + volume;
 	}
 	
 	public String toCsvString() {
-		return dateTime + ", " + price + ", " + volume;
+		SimpleDateFormat sdfByDate = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdfByTime = new SimpleDateFormat("HH:mm:ss");
+		
+		return sdfByDate.format(dateTime) + ", " + sdfByTime.format(dateTime) + ", " + price + ", " + volume;
 	}
 
 }

@@ -136,7 +136,7 @@ public class StockDao implements databaseDao<Stock>, exportable<Stock> {
 	}
 	
 	public List<Stock> findMinPrice(String ISIN) {
-		String sql = "SELECT * FROM TW_" + ISIN + " JOIN (SELECT Min(price) min_price FROM TW_" + ISIN +" GROUP BY date) t2 ON t1.price = t2.min_price";
+		String sql = "SELECT * FROM TW_" + ISIN + " JOIN (SELECT Min(price) min_price FROM TW_" + ISIN +" GROUP BY date) t2 ON t1.price = t2.min_price WHERE price != 0";
 		
 		try(PreparedStatement preState = conn.prepareStatement(sql);
 				ResultSet rs = preState.executeQuery();
@@ -261,7 +261,7 @@ public class StockDao implements databaseDao<Stock>, exportable<Stock> {
 				BufferedWriter bw = new BufferedWriter(osw);
 				) {
 			
-			bw.write("dateTime, price, volume" + "\n");
+			bw.write("date, time, price, volume" + "\n");
 			
 			for (Stock stock : list) {
 				bw.write(stock.toCsvString() + "\n");
