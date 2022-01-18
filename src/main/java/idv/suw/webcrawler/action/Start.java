@@ -145,6 +145,9 @@ public class Start {
 					System.out.println("結束程式, 感謝您的使用");
 				}
 				
+				//回到-輸入ISIN
+				correctISIN = false;
+				
 			}catch (IOException e) {
 				LogFile lf = new LogFile();
 				lf.logGenerate(e);
