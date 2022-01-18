@@ -56,7 +56,7 @@ public class Stock {
 		SimpleDateFormat sdfByDate = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat sdfByTime = new SimpleDateFormat("HH:mm:ss");
 		
-		return "date: " + sdfByDate.format(dateTime) + ", " + "time: " + sdfByTime.format(dateTime) + "price: " + price + ", " + "volume: " + volume;
+		return "date: " + sdfByDate.format(dateTime) + ", " + "time: " + sdfByTime.format(dateTime) + ", " + "price: " + price + ", " + "volume: " + volume;
 	}
 	
 	public String toCsvString() {

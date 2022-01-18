@@ -2,7 +2,6 @@ package idv.suw.webcrawler.model;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -22,8 +21,8 @@ public class YahooFinanceCrawler {
 	}
 	
 	public Document getDoc(String ISIN) {
-		Date currentTime = Calendar.getInstance().getTime();
-		String url = "https://tw.stock.yahoo.com/_td-stock/api/resource/FinanceChartService.ApacLibraCharts;autoRefresh=" + currentTime.toString() + ";symbols=%5B%22" + ISIN + ".TW%22%5D;type=tick?bkt=&device=desktop&ecma=modern&feature=ecmaModern%2CuseVersionSwitch%2CuseNewQuoteTabColor&intl=tw&lang=zh-Hant-TW&partner=none&prid=aeg8ts1gu2uk6&region=TW&site=finance&tz=Asia%2FTaipei&ver=1.2.1214&returnMeta=true";
+		long currentTime = Calendar.getInstance().getTimeInMillis();
+		String url = "https://tw.stock.yahoo.com/_td-stock/api/resource/FinanceChartService.ApacLibraCharts;autoRefresh=" + currentTime + ";symbols=%5B%22" + ISIN + ".TW%22%5D;type=tick?bkt=&device=desktop&ecma=modern&feature=ecmaModern%2CuseVersionSwitch%2CuseNewQuoteTabColor&intl=tw&lang=zh-Hant-TW&partner=none&prid=aeg8ts1gu2uk6&region=TW&site=finance&tz=Asia%2FTaipei&ver=1.2.1214&returnMeta=true";
 		
 		driver.get(url);
 		

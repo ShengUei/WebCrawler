@@ -1,5 +1,6 @@
 package idv.suw.webcrawler;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -15,20 +16,20 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class DemoCrawler {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		Date time = Calendar.getInstance().getTime();
 		String ISIN = "2330";
 		String ISIN1 = "2303";
 		String url = "https://tw.stock.yahoo.com/_td-stock/api/resource/FinanceChartService.ApacLibraCharts;autoRefresh=" + time.toString() + ";symbols=%5B%22" + ISIN + ".TW%22%5D;type=tick?bkt=&device=desktop&ecma=modern&feature=ecmaModern%2CuseVersionSwitch%2CuseNewQuoteTabColor&intl=tw&lang=zh-Hant-TW&partner=none&prid=aeg8ts1gu2uk6&region=TW&site=finance&tz=Asia%2FTaipei&ver=1.2.1214&returnMeta=true";
 		String url1 = "https://tw.stock.yahoo.com/_td-stock/api/resource/FinanceChartService.ApacLibraCharts;autoRefresh=" + time.toString() + ";symbols=%5B%22" + ISIN1 + ".TW%22%5D;type=tick?bkt=&device=desktop&ecma=modern&feature=ecmaModern%2CuseVersionSwitch%2CuseNewQuoteTabColor&intl=tw&lang=zh-Hant-TW&partner=none&prid=aeg8ts1gu2uk6&region=TW&site=finance&tz=Asia%2FTaipei&ver=1.2.1214&returnMeta=true";
 		
-		//DAO
+		//ConnectionFactory
 		WebDriverManager.chromedriver().setup();
 		
 		ChromeOptions option = new ChromeOptions();
 		
 		WebDriver driver = new ChromeDriver(option.addArguments("headless"));
-		//DAO
+		//ConnectionFactory
 		
 		//parseWeb
 		String[] str = {url,url1};
@@ -77,9 +78,9 @@ public class DemoCrawler {
 		}
 		//parseWeb
 		
-		//DAO
+		//ConnectionFactory
 		driver.quit();
-		//DAO
+		//ConnectionFactory
 
 	}
 

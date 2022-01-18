@@ -11,30 +11,47 @@ import idv.suw.webcrawler.util.LogFile;
 import idv.suw.webcrawler.util.SqlServerConnectionFactory;
 
 public class Start {
+	private static String ISIN;
 
 	public static void main(String[] args) {
 		boolean quitPrograme = false;
+		boolean correctISIN = false;
 		List<Stock> outputData = null;
-		String ISIN;
 		String options;
 		String date;
+		String id;
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
 		while (quitPrograme == false) {
 			try {
 				//輸入ISIN
-				System.out.println("請輸入欲查詢的股票代號");
-				ISIN =br.readLine();
-				
-				//台積電(2330), 聯電(2303), 聯發科(2454), 鴻海(2317), 南電(8046), 景碩(3189), 欣興(3037), 日月光投控(3711)
-//				String[] ISINarray = {"2330","2303","2454","2317","8046","3189","3037","3711"};
+				while (correctISIN == false) {
+					System.out.println("請輸入欲查詢的股票代號");
+					System.out.println("目前資料庫中含有的股票資料: 台積電(2330), 聯電(2303), 聯發科(2454), 鴻海(2317), 南電(8046), 景碩(3189), 欣興(3037), 日月光投控(3711)");
+					String inputISIN = br.readLine();
+					
+					if (Integer.parseInt(inputISIN) != 2330 && Integer.parseInt(inputISIN) != 2303 
+							&& Integer.parseInt(inputISIN) != 2454 && Integer.parseInt(inputISIN) != 2317 
+							&& Integer.parseInt(inputISIN) != 8046 && Integer.parseInt(inputISIN) != 3189 
+							&& Integer.parseInt(inputISIN) != 3037 && Integer.parseInt(inputISIN) != 3711) {
+						
+						System.out.println("輸入的股票代號錯誤");
+						System.out.println("請重新輸入股票代號");
+						System.out.println("==================================================");
+						System.out.println();
+						
+					} else {
+						correctISIN = true;
+						ISIN = inputISIN;
+					}
+				}
 				
 				StockDao stockDao = new StockDao();
 				
 				//欲查詢的資料
 				System.out.println("請問需要查詢什麼資料?");
-				System.out.println("1.全部資料, 2.特定日期的資料 3.每日的最高成交金額, 4.每日的最低成交金額");
+				System.out.println("1.全部資料, 2.特定日期的資料 3.每日的最高成交金額, 4.每日的最低成交金額, 5.更新資料, 6.刪除資料");
 				options = br.readLine();
 				
 				switch (Integer.parseInt(options)) {
@@ -84,17 +101,32 @@ public class Start {
 					outputData = findMinPrice;
 					
 					break;
+				
+				case 5:
+					System.out.println("請輸入欲更新的資料id");
+					id = br.readLine();
+					stockDao.updateDataById(ISIN, id);
+					
+					break;
+					
+				case 6:
+					System.out.println("請輸入欲刪除的資料id");
+					id = br.readLine();
+					stockDao.deleteDataById(ISIN, id);
+					
+					break;
+					
 				}
 				
 				//輸出CSV
 				System.out.println("是否需要將查詢結果輸出成CSV檔?");
 				System.out.println("1.是, 2.否 (請輸入 1 或 2)");
 				options = br.readLine();
-				System.out.print("options = " + options);
+				
 				if (Integer.parseInt(options) == 1) {
 					stockDao.exportCSV(outputData, ISIN);
 					
-				}else if (Integer.parseInt(options) != 1 || Integer.parseInt(options) != 2) {
+				}else if (Integer.parseInt(options) != 1 && Integer.parseInt(options) != 2) {
 					System.out.println("您的輸入錯誤，因此系統判定為不將查詢結果輸出CSV檔");
 				}
 				

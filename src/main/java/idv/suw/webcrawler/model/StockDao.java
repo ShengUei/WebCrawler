@@ -1,8 +1,10 @@
 package idv.suw.webcrawler.model;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.sql.Connection;
 import java.sql.Date;
@@ -102,7 +104,7 @@ public class StockDao implements databaseDao<Stock>, exportable<Stock> {
 	}
 	
 	public List<Stock> findMaxPrice(String ISIN) {
-		String sql = "SELECT * FROM TW_" + ISIN + " JOIN (SELECT MAX(price) max_price FROM TW_" + ISIN +" GROUP BY date) t2 ON t1.price = t2.max_price";
+		String sql = "SELECT * FROM TW_" + ISIN + " t1" + " JOIN (SELECT MAX(price) max_price FROM TW_" + ISIN +" GROUP BY date) t2 ON t1.price = t2.max_price";
 		
 		try(PreparedStatement preState = conn.prepareStatement(sql);
 				ResultSet rs = preState.executeQuery();
@@ -136,7 +138,7 @@ public class StockDao implements databaseDao<Stock>, exportable<Stock> {
 	}
 	
 	public List<Stock> findMinPrice(String ISIN) {
-		String sql = "SELECT * FROM TW_" + ISIN + " JOIN (SELECT Min(price) min_price FROM TW_" + ISIN +" GROUP BY date) t2 ON t1.price = t2.min_price WHERE price != 0";
+		String sql = "SELECT * FROM TW_" + ISIN + " t1" + " JOIN (SELECT Min(price) min_price FROM TW_" + ISIN +" WHERE price != 0 GROUP BY date) t2 ON t1.price = t2.min_price";
 		
 		try(PreparedStatement preState = conn.prepareStatement(sql);
 				ResultSet rs = preState.executeQuery();
@@ -214,6 +216,55 @@ public class StockDao implements databaseDao<Stock>, exportable<Stock> {
 			}
 			
 			preState.executeBatch();
+			
+			return true;
+			
+		} catch (SQLException e) {
+			LogFile logFile = new LogFile();
+			logFile.logGenerate(e);
+			
+			return false;
+		}
+		
+	}
+	
+	@Override
+	public boolean updateDataById(String ISIN, String id) {
+		String sql = "UPDATE TW_" + ISIN + "SET price = ? volume = ?" + " WHERE id = ?";
+		
+		try(PreparedStatement preState = conn.prepareStatement(sql);
+				BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+				){
+			
+			System.out.println("請輸入欲更改的成交價");
+			double price = Double.parseDouble(br.readLine());
+			preState.setDouble(1, price);
+			
+			System.out.println("請輸入欲更改的成交量");
+			int volume = Integer.parseInt(br.readLine());
+			preState.setInt(2, volume);
+			
+			preState.setString(3,id);
+			
+			return true;
+			
+		} catch (SQLException | IOException e) {
+			LogFile logFile = new LogFile();
+			logFile.logGenerate(e);
+			
+			return false;
+		}
+		
+	}
+	
+	@Override
+	public boolean deleteDataById(String ISIN, String id) {
+		String sql = "DELETE TW_" + ISIN + " WHERE id = ?";
+		
+		try(PreparedStatement preState = conn.prepareStatement(sql);
+				){
+			
+			preState.setString(1,id);
 			
 			return true;
 			

@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -58,13 +59,23 @@ public class Test {
 		//1642122000
 		//1642138080,1642138200
 		
-		long a = 1642138080000L;
-		long b = 1642138200000L;
+//		long a = 1642138080000L;
+//		long b = 1642138200000L;
+//		
+//		Date date1 = new Date(1642481932133L);
+//		Date date2 = new Date(1642481932127L);
+//		System.out.println("1642481932133 = " + date1);
+//		System.out.println("1642481932127 = " + date2);
+//		
+//		long currentTime = Calendar.getInstance().getTimeInMillis();
+//		System.out.println("currentTime = " + currentTime);
 		
-		Date date1 = new Date(a);
-		Date date2 = new Date(b);
-		System.out.println("1642138080 = " + date1);
-		System.out.println("1642138200 = " + date2);
+		System.out.println("Math.random(): " + Math.random());
+		
+		Random random = new Random();
+		System.out.println("random.nextDouble(): " + random.nextDouble());
+		System.out.println("random.nextInt(3): " + random.nextInt(3));
+		System.out.println("Math.round((random.nextInt(2) + random.nextDouble()) * 1000): " + Math.round((random.nextInt(2) + random.nextDouble()) * 1000));
 		
 //		Date date1 = new Date(Long.parseLong("1642122000000"));
 //		System.out.println(Long.parseLong("1642122000"));
@@ -155,7 +166,8 @@ public class Test {
 //		
 //		
 //		driver.quit();
-//		
+		
+//		System.out.println("number = " + Math.random() * 10000);
 	}
 
 }

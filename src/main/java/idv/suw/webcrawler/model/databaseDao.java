@@ -8,6 +8,10 @@ public interface databaseDao<T> {
 	
 	public boolean insertData(String tableName, T input);
 	
+	public boolean updateDataById(String tableName, String id);
+	
+	public boolean deleteDataById(String tableName, String id);
+	
 	public boolean createTable(String tableName);
 
 }
